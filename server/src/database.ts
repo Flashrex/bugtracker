@@ -13,7 +13,7 @@ connection.connect((err) => {
         Logger.error('database', `Error connecting to database: ${err}`);
         return;
     }
-    Logger.log('database', `Connected to database [${process.env.HOST}:${process.env.DATABASE}]`);
+    Logger.log('database', `Connected to database [\x1b[34m${process.env.HOST}:${process.env.DATABASE}\x1b[0m]`);
 });
 
 export default connection;

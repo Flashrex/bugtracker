@@ -14,7 +14,7 @@ app.get("/", (req, res) => res.redirect("/issues"));
 app.use(express.json());
 
 app.listen(port, () => {
-    Logger.log("app", `Server is running at http://localhost:${port}`);
+    Logger.log("app", `Server is running at \x1b[34mhttp://localhost:${port}`);
 });
 
 app.use("/issues", issuesRouter);
