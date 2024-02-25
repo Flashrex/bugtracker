@@ -49,6 +49,13 @@ function create(issue: Issue): Promise<any> {
 }
 
 function update(id: number, issue: Issue): Promise<any> {
+
+    issue = {
+        ...issue,
+        updated_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+    }
+
+
     return new Promise((resolve, reject) => {
         database.query('UPDATE issues SET ? WHERE id = ?', [issue, id], (error, results) => {
             if (error) {

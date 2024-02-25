@@ -3,8 +3,8 @@ export type Issue = {
     title: string;
     description: string;
     status: string;
-    created_at: Date;
-    updated_at: Date;
+    created_at: string;
+    updated_at: string;
     created_by: User;
 };
 
@@ -13,5 +13,5 @@ export type User = {
     username: string;
     email: string;
     password: string;
-    created_at: Date;
+    created_at: string;
 };
