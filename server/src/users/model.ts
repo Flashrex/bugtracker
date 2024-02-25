@@ -16,6 +16,13 @@ function get(id: number): Promise<User> {
 }
 
 function create(user: User): Promise<any> {
+
+    user = {
+        ...user,
+        created_at: new Date().toISOString().slice(0, 19).replace('T', ' ')
+    }
+
+
     return new Promise((resolve, reject) => {
         database.query('INSERT INTO users SET ?', user, (error, results) => {
             if (error) {
