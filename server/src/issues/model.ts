@@ -5,12 +5,17 @@ import userModel from "../users/model";
 
 function getAll(): Promise<Issue[]> {
     return new Promise((resolve, reject) => {
-        database.query('SELECT * FROM issues', (error, results) => {
+        database.query('SELECT * FROM issues', async (error, results) => {
             if (error) {
                 log.error("issues/getAll", `Error fetching issues from database: ${error}`);
                 reject(error);
                 return;
             }
+
+            await Promise.all(results.map(async (result) => {
+                result.created_by = await userModel.get(result.created_by);
+            }));
+
             resolve(results);
         });
     });
@@ -24,6 +29,7 @@ function get(id: number): Promise<Issue> {
                 reject(error);
                 return;
             }
+
             results[0].created_by = await userModel.get(results[0].created_by);
 
             resolve(results[0]);
