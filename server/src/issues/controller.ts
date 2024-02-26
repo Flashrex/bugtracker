@@ -14,7 +14,9 @@ function listIssues(req: Request, res: Response): void {
 
 function listSingleIssue(req: Request, res: Response): void {
     model.get(parseInt(req.params.id))
-        .then(issue => res.json(issue))
+        .then(async issue => {
+            res.json(issue);
+        })
         .catch(error => {
             logger.error("issues/getAction", `Error fetching issue: ${error}`);
             res.status(500).json({ error: "Error fetching issue" });

@@ -1,6 +1,7 @@
 import database from '../database';
 import log from '../misc/logger';
 import { Issue } from '../misc/types';
+import userModel from "../users/model";
 
 function getAll(): Promise<Issue[]> {
     return new Promise((resolve, reject) => {
@@ -17,13 +18,15 @@ function getAll(): Promise<Issue[]> {
 
 function get(id: number): Promise<Issue> {
     return new Promise((resolve, reject) => {
-        database.query('SELECT * FROM issues WHERE id = ?', [id], (error, results) => {
+        database.query('SELECT * FROM issues WHERE id = ? LIMIT 1', [id], async (error, results) => {
             if (error) {
                 log.error("issues/get", `Error fetching issue from database: ${error}`);
                 reject(error);
                 return;
             }
-            resolve(results);
+            results[0].created_by = await userModel.get(results[0].created_by);
+
+            resolve(results[0]);
         });
     });
 }
