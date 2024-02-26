@@ -4,6 +4,7 @@ import Logger from "./misc/logger";
 
 import issuesRouter from "./issues";
 import usersRouter from "./users";
+import postsRouter from "./posts";
 
 const app = express();
 const port = 3000;
@@ -19,3 +20,4 @@ app.listen(port, () => {
 
 app.use("/issues", issuesRouter);
 app.use("/users", usersRouter);
+app.use("/posts", postsRouter);

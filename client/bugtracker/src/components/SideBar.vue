@@ -30,19 +30,19 @@ function goToAbout() {
             <ul>
                 <li @click="goToHome">
                     <img alt="home_icon" src="../assets/home.svg" width="30" height="30" />
-                    Home
+                    <span class="icon_text">Home</span>
                 </li>
                 <li @click="goToIssues">
                     <img alt="home_icon" src="../assets/bug.svg" width="30" height="30" />
-                    Issues
+                    <span class="icon_text">Issues</span>
                 </li>
                 <li @click="goToDiscussion">
                     <img alt="home_icon" src="../assets/chat.svg" width="30" height="30" />
-                    Discussion
+                    <span class="icon_text">Discussion</span>
                 </li>
                 <li @click="goToAbout">
                     <img alt="home_icon" src="../assets/contact.svg" width="30" height="30" />
-                    About
+                    <span class="icon_text">About</span>
                 </li>
             </ul>
         </nav>
@@ -97,5 +97,29 @@ li:hover {
 
 li img {
     filter: invert(100%);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        padding: 0.5rem 0.2rem;
+        border-radius: 0;
+    }
+
+    .logo-container>h1 {
+        display: none;
+    }
+
+    .logo-container>img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .icon_text {
+        display: none;
+    }
+
+    nav {
+        margin: 0;
+    }
 }
 </style>

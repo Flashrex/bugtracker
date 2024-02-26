@@ -69,6 +69,7 @@ function goToIssue(id: number) {
 
 <style scoped>
 table {
+    margin: 2rem 0;
     width: 80vw;
     border-collapse: collapse;
 }
@@ -86,10 +87,12 @@ th {
 
 td {
     padding: 0.2rem;
+    font-weight: inherit;
 }
 
 tbody>tr:hover {
     cursor: pointer;
+    font-weight: bold;
 }
 
 tbody>tr:nth-child(even) {

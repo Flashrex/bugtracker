@@ -15,3 +15,10 @@ export type User = {
     password: string;
     created_at: string;
 };
+
+export type Post = {
+    id: number;
+    content: string;
+    created_at: string;
+    author: User;
+};
