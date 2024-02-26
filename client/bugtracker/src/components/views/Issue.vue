@@ -69,5 +69,6 @@ function deleteIssue() {
 <style scoped>
 .issue {
     padding: 1rem 2rem;
+    max-width: 80vw;
 }
 </style>
