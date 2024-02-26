@@ -62,9 +62,11 @@ function create(post: Post): Promise<any> {
 
         let query = `INSERT INTO posts 
             (content, created_at, author) 
-            VALUES ('${post.content}', '${curTime}', ${post.author.id})`;
+            VALUES (?, ?, ?)`;
 
-        database.query(query, (error, results) => {
+        let values = [post.content, curTime, post.author.id];
+
+        database.query(query, values, (error, results) => {
             if (error) {
                 log.error("posts/create", `Error creating post in database: ${error}`);
                 reject(error);
@@ -80,10 +82,12 @@ function update(id: number, post: Post): Promise<any> {
         const curTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         let query = `UPDATE posts 
-            SET content = '${post.content}' 
-            WHERE id = ${id}`;
+            SET content = ?
+            WHERE id = ?`;
 
-        database.query(query, (error, results) => {
+        let values = [post.content, id];
+
+        database.query(query, values, (error, results) => {
             if (error) {
                 log.error("posts/update", `Error updating post in database: ${error}`);
                 reject(error);

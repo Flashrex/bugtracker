@@ -44,9 +44,11 @@ function create(issue: Issue): Promise<any> {
 
         let query = `INSERT INTO issues 
             (title, description, status, created_at, updated_at, created_by) 
-            VALUES ('${issue.title}', '${issue.description}', '${issue.status}', '${curTime}', '${curTime}', ${issue.created_by.id})`;
+            VALUES (?, ?, ?, ?, ?, ?)`;
 
-        database.query(query, (error, results) => {
+        let values = [issue.title, issue.description, issue.status, curTime, curTime, issue.created_by.id];
+
+        database.query(query, values, (error, results) => {
             if (error) {
                 log.error("issues/create", `Error creating issue in database: ${error}`);
                 reject(error);
