@@ -46,6 +46,11 @@ function goToAbout() {
                 </li>
             </ul>
         </nav>
+
+        <div class="footer">
+            <!-- Copyright -->
+            <p>&copy; 2024 Flashrex. All rights reserved.</p>
+        </div>
     </div>
 </template>
 
@@ -99,6 +104,19 @@ li img {
     filter: invert(100%);
 }
 
+.footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.footer p {
+    font-size: 0.8rem;
+    color: #ffffff80;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         padding: 0.5rem 0.2rem;
@@ -120,6 +138,10 @@ li img {
 
     nav {
         margin: 0;
+    }
+
+    .footer {
+        display: none;
     }
 }
 </style>

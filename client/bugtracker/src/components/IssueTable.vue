@@ -40,49 +40,57 @@ function goToIssue(id: number) {
 </script>
 
 <template>
-    <table>
-        <thead class="table_head">
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Description</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Created By</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="issue in issues" :key="issue.id" @click="goToIssue(issue.id)">
-                <td>{{ issue.id }}</td>
-                <td>{{ issue.title }}</td>
-                <td>{{ issue.status }}</td>
-                <td>{{ truncateString(issue.description, 80) }}</td>
-                <td>{{ formatDateString(issue.created_at) }}</td>
-                <td>{{ formatDateString(issue.updated_at) }}</td>
-                <td>{{ issue.created_by.username }}</td>
+    <div class="table_container">
+        <table>
+            <thead class="table_head">
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Status</th>
+                    <th>Description</th>
+                    <th>Assigned to</th>
+                    <th>Last Updated</th>
+                    <th>Created At</th>
+                    <th>Created By</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="issue in issues" :key="issue.id" @click="goToIssue(issue.id)">
+                    <td>{{ issue.id }}</td>
+                    <td>{{ issue.title }}</td>
+                    <td><span class="tag" :class="issue.status">{{ issue.status }}</span></td>
+                    <td>{{ truncateString(issue.description, 80) }}</td>
+                    <td>{{ issue.assigned_to ? issue.assigned_to.username : "No one" }}</td>
+                    <td>{{ formatDateString(issue.updated_at) }}</td>
+                    <td>{{ formatDateString(issue.created_at) }}</td>
+                    <td>{{ issue.created_by.username }}</td>
 
-            </tr>
-        </tbody>
-    </table>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </template>
 
 <style scoped>
-table {
+.table_container {
     margin: 2rem 0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+table {
     width: 80vw;
     border-collapse: collapse;
 }
 
 thead>tr {
     background-color: #149e52;
-
 }
 
 th {
     text-align: left;
     font-weight: bold;
-    padding: 0.2rem;
+    padding: 0.5rem 1rem;
 }
 
 td {
@@ -90,12 +98,34 @@ td {
     font-weight: inherit;
 }
 
+td {
+    padding: 1rem;
+}
+
 tbody>tr:hover {
     cursor: pointer;
-    font-weight: bold;
+    opacity: 0.7;
 }
 
 tbody>tr:nth-child(even) {
     background-color: #f3f3f305;
+}
+
+.tag {
+    padding: 0.2rem 1rem;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.open {
+    background-color: #149e52;
+}
+
+.in_progress {
+    background-color: #d4af18;
+}
+
+.closed {
+    background-color: #d52626;
 }
 </style>
