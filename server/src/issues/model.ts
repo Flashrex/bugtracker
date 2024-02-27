@@ -1,6 +1,6 @@
 import database from '../database';
 import log from '../misc/logger';
-import { Issue } from '../misc/types';
+import { Issue, IssueData } from '../misc/types';
 import userModel from "../users/model";
 
 function getAll(): Promise<Issue[]> {
@@ -33,6 +33,49 @@ function get(id: number): Promise<Issue> {
             results[0].created_by = await userModel.get(results[0].created_by);
 
             resolve(results[0]);
+        });
+    });
+}
+
+function getIssueData(): Promise<IssueData> {
+    return new Promise((resolve, reject) => {
+        database.query(`
+        SELECT 
+        COUNT(*) AS total,
+        SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) AS open,
+        SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) AS closed,
+        SUM(CASE WHEN MONTH(created_at) = MONTH(CURRENT_DATE) AND YEAR(created_at) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) AS issues_this_month,
+        SUM(CASE WHEN MONTH(created_at) = MONTH(DATE_ADD(CURRENT_DATE, INTERVAL -1 MONTH)) AND YEAR(created_at) = YEAR(DATE_ADD(CURRENT_DATE, INTERVAL -1 MONTH)) THEN 1 ELSE 0 END) AS issues_last_month
+        FROM issues;`, async (error, results) => {
+            if (error) {
+                log.error("issues/getIssueData", `Error fetching issue data from database: ${error}`);
+                reject(error);
+                return;
+            }
+
+            resolve(results[0]);
+        });
+    });
+}
+
+function getIssueCountByAuthors(): Promise<any> {
+    return new Promise((resolve, reject) => {
+        database.query(`
+        SELECT 
+        COUNT(*) AS count,
+        users.username
+        FROM issues
+        JOIN users ON issues.created_by = users.id
+        GROUP BY created_by
+        ORDER BY count DESC
+        LIMIT 5;`, async (error, results) => {
+            if (error) {
+                log.error("issues/getIssueCountByAuthors", `Error fetching issue count by authors from database: ${error}`);
+                reject(error);
+                return;
+            }
+
+            resolve(results);
         });
     });
 }
@@ -95,6 +138,8 @@ function remove(id: number): Promise<any> {
 export default {
     getAll,
     get,
+    getIssueData,
+    getIssueCountByAuthors,
     create,
     update,
     remove,

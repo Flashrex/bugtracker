@@ -23,6 +23,21 @@ function listSingleIssue(req: Request, res: Response): void {
         });
 }
 
+function getIssueData(req: Request, res: Response): void {
+    Promise.all([model.getIssueData(), model.getIssueCountByAuthors()])
+        .then(([issueData, issueCountByAuthors]) => {
+            const mergedData = {
+                ...issueData,
+                top_authors: issueCountByAuthors
+            };
+            res.json(mergedData);
+        })
+        .catch(error => {
+            logger.error("issues/getIssueDataAction", `Error fetching issue data: ${error}`);
+            res.status(500).json({ error: "Error fetching issue data" });
+        });
+}
+
 async function createIssue(req: Request, res: Response): Promise<void> {
 
     //todo: check if user is logged in and get user from database
@@ -69,6 +84,7 @@ function deleteIssue(req: Request, res: Response): void {
 export {
     listIssues,
     listSingleIssue,
+    getIssueData,
     createIssue,
     updateIssue,
     deleteIssue
