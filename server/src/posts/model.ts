@@ -13,7 +13,7 @@ function getAll(): Promise<any> {
             }
 
             await Promise.all(results.map(async (result) => {
-                result.author = await userModel.get(result.author);
+                result.author = await userModel.getById(result.author);
             }));
 
             resolve(results);
@@ -31,7 +31,7 @@ function getSome(limit: number, offset: number): Promise<any> {
             }
 
             await Promise.all(results.map(async (result) => {
-                result.author = await userModel.get(result.author);
+                result.author = await userModel.getById(result.author);
             }));
 
             resolve(results);
@@ -48,7 +48,7 @@ function get(id: number): Promise<any> {
                 return;
             }
 
-            results[0].author = await userModel.get(results[0].author);
+            results[0].author = await userModel.getById(results[0].author);
 
             resolve(results[0]);
         });

@@ -50,7 +50,6 @@ async function createPost() {
 
 async function deletePost(postid: number) {
     try {
-        console.log(postid);
         const response = await axios.delete(`${import.meta.env.VITE_APP_API_ENDPOINT}/posts/${postid}`);
         posts.value.splice(posts.value.findIndex((post) => post.id === postid), 1);
     } catch (error) {

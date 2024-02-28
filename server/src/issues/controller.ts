@@ -43,7 +43,7 @@ async function createIssue(req: Request, res: Response): Promise<void> {
     //todo: check if user is logged in and get user from database
     //let user = {} as User;
 
-    const user = await userModel.get(1);
+    const user = await userModel.get("testUser");
 
     if (!user) {
         //todo: return error

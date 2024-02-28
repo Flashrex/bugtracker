@@ -13,9 +13,10 @@ function getAll(): Promise<Issue[]> {
             }
 
             await Promise.all(results.map(async (result) => {
-                result.created_by = await userModel.get(result.created_by);
+                result.created_by = await userModel.getById(result.created_by);
             }));
 
+            console.log(results);
             resolve(results);
         });
     });
@@ -30,7 +31,7 @@ function get(id: number): Promise<Issue> {
                 return;
             }
 
-            results[0].created_by = await userModel.get(results[0].created_by);
+            results[0].created_by = await userModel.getById(results[0].created_by);
 
             resolve(results[0]);
         });

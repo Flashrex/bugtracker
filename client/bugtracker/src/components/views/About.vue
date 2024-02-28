@@ -18,6 +18,7 @@
             <li>Node.js</li>
             <li>Express</li>
             <li>MongoDB</li>
+            <li>chart.js</li>
         </ul>
 
         <p>

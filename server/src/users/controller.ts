@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 
 function listSingleUser(req: Request, res: Response): void {
-    model.get(parseInt(req.params.id))
+    model.getById(parseInt(req.params.id))
         .then(issue => res.json(issue))
         .catch(error => {
             logger.error("users/getAction", `Error fetching user: ${error}`);
@@ -13,7 +13,7 @@ function listSingleUser(req: Request, res: Response): void {
 }
 
 function createUser(req: Request, res: Response): void {
-    model.create(req.body)
+    model.create(req.body.username, req.body.password)
         .then(result => res.json(result))
         .catch(error => {
             logger.error("users/createAction", `Error creating user: ${error}`);
