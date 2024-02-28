@@ -10,8 +10,6 @@ function getAll(team: number): Promise<Issue[]> {
                 reject(error);
                 return;
             }
-
-            console.log(results);
             resolve(results);
         });
     });

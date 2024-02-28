@@ -14,7 +14,6 @@ onMounted(async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/issues/${route.params.id}`);
         issue.value = response.data;
-        console.log(issue.value);
         loading.value = false;
     } catch (error) {
         console.error(error);
@@ -33,7 +32,6 @@ function deleteIssue() {
     if (issue.value) {
         axios.delete(`${import.meta.env.VITE_APP_API_ENDPOINT}/issues/${issue.value.id}`)
             .then(() => {
-                console.log('Issue deleted');
                 router.push('/issues');
             })
             .catch((error) => {

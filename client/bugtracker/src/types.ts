@@ -3,10 +3,10 @@ export type Issue = {
     title: string;
     description: string;
     status: string;
-    assigned_to: number;
+    assigned_to: User;
     created_at: string;
     updated_at: string;
-    created_by: number;
+    created_by: User;
 };
 
 export type User = {

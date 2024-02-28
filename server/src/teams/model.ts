@@ -29,11 +29,6 @@ function getById(id: number): Promise<any> {
                 return;
             }
 
-            console.log(results[0].created_by);
-
-            results[0].created_by = await userModel.getById(results[0].created_by);
-            //results[0].members = await userModel.getAllByTeam(results[0].id);
-
             resolve(results[0]);
 
         });
