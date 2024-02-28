@@ -4,18 +4,18 @@ import { formatDateString } from '../../utils/formatDateString';
 import type { Post, User } from '@/types';
 import axios from 'axios';
 
-const user = ref({ id: 1, username: 'testUser', email: '' });
+const userId = ref(0);
 const input = ref(null as HTMLInputElement | null);
 const postContainer = ref(null as HTMLDivElement | null);
 
-const posts = ref([] as Post[]);
+const posts = ref<Post[]>([]);
 
 onMounted(async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/posts`);
-        posts.value = response.data;
+        posts.value = response.data.posts;
+        userId.value = response.data.user;
 
-        console.log(posts.value);
     } catch (error) {
         console.error(error);
     }
@@ -35,8 +35,8 @@ async function createPost() {
             id: response.data.insertId,
             content: input.value ? input.value.value : 'Empty post',
             created_at: new Date().toISOString(),
-            author: user.value as User
-        } as Post;
+            author: { id: userId.value } as User
+        };
 
         input.value!.value = '';
         posts.value.push(post);
@@ -62,7 +62,6 @@ const scrollToBottom = () => {
         postContainer.value!.scrollTop = postContainer.value!.scrollHeight;
     });
 };
-
 </script>
 
 <template>
@@ -70,11 +69,11 @@ const scrollToBottom = () => {
         <h1>Discussion</h1>
         <div class="chatbox">
             <div class="post_container" ref="postContainer">
-                <div v-for="post in posts" class="post" :class="{ 'post-self': user.id === post.author.id }" :key="post.id">
+                <div v-for="post in posts" class="post" :class="{ 'post-self': userId === post.author.id }" :key="post.id">
                     <div class="post_headline">
-                        <h2>{{ user.id === post.author.id ? "You... " : post.author.username }}</h2>
+                        <h2>{{ userId === post.author?.id ? "You... " : post.author?.username }}</h2>
                         <p>wrote at {{ formatDateString(post.created_at) }}</p>
-                        <img v-if="user.id === post.author.id" src="../../assets/delete.svg" width="20" height="20"
+                        <img v-if="userId === post.author.id" src="../../assets/delete.svg" width="20" height="20"
                             @click="deletePost(post.id)">
                     </div>
                     <p>{{ post.content }}</p>

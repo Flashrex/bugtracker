@@ -9,7 +9,7 @@ import auth from "./session/auth";
 import issuesRouter from "./issues";
 import usersRouter from "./users";
 import postsRouter from "./posts";
-import sessionRouter from "./session";
+import sessionRouter, { ensureAuthenticated } from "./session";
 
 const app = express();
 const port = 3000;
@@ -31,9 +31,9 @@ app.use("/session", sessionRouter);
 //routing
 app.get("/favicon.ico", (req, res) => res.status(204));
 app.get("/", (req, res) => res.redirect("/issues"));
-app.use("/issues", issuesRouter);
-app.use("/users", usersRouter);
-app.use("/posts", postsRouter);
+app.use("/issues", ensureAuthenticated, issuesRouter);
+app.use("/users", ensureAuthenticated, usersRouter);
+app.use("/posts", ensureAuthenticated, postsRouter);
 
 app.listen(port, () => {
     Logger.log("app", `Server is running at \x1b[34mhttp://localhost:${port}`);

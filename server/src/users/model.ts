@@ -15,14 +15,30 @@ function get(username: string): Promise<User> {
     });
 }
 
+function getAllByTeam(team: number): Promise<User[]> {
+    return new Promise((resolve, reject) => {
+        database.query('SELECT * FROM users WHERE team = ?', [team], async (error, results) => {
+            if (error) {
+                log.error("users/getAllByTeam", `Error fetching users from database: ${error}`);
+                reject(error);
+                return;
+            }
+
+            resolve(results);
+        });
+    }
+    );
+}
+
 function getById(id: number): Promise<User> {
     return new Promise((resolve, reject) => {
-        database.query('SELECT * FROM users WHERE id = ? LIMIT 1', [id], (error, results) => {
+        database.query('SELECT * FROM users WHERE id = ? LIMIT 1', [id], async (error, results) => {
             if (error) {
                 log.error("users/getById", `Error fetching user from database: ${error}`);
                 reject(error);
                 return;
             }
+
             resolve(results[0]);
         });
     });
@@ -78,6 +94,7 @@ function remove(id: number): Promise<any> {
 export default {
     get,
     getById,
+    getAllByTeam,
     create,
     update,
     remove

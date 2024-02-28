@@ -1,20 +1,15 @@
 import database from '../database';
 import log from '../misc/logger';
 import { Issue, IssueData } from '../misc/types';
-import userModel from "../users/model";
 
-function getAll(): Promise<Issue[]> {
+function getAll(team: number): Promise<Issue[]> {
     return new Promise((resolve, reject) => {
-        database.query('SELECT * FROM issues', async (error, results) => {
+        database.query('SELECT * FROM issues WHERE team = ?', [team], async (error, results) => {
             if (error) {
                 log.error("issues/getAll", `Error fetching issues from database: ${error}`);
                 reject(error);
                 return;
             }
-
-            await Promise.all(results.map(async (result) => {
-                result.created_by = await userModel.getById(result.created_by);
-            }));
 
             console.log(results);
             resolve(results);
@@ -30,8 +25,6 @@ function get(id: number): Promise<Issue> {
                 reject(error);
                 return;
             }
-
-            results[0].created_by = await userModel.getById(results[0].created_by);
 
             resolve(results[0]);
         });
@@ -87,10 +80,10 @@ function create(issue: Issue): Promise<any> {
         const curTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         let query = `INSERT INTO issues 
-            (title, description, status, created_at, updated_at, created_by) 
-            VALUES (?, ?, ?, ?, ?, ?)`;
+            (title, description, status, created_at, updated_at, created_by, team) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-        let values = [issue.title, issue.description, issue.status, curTime, curTime, issue.created_by.id];
+        let values = [issue.title, issue.description, issue.status, curTime, curTime, issue.created_by, issue.team];
 
         database.query(query, values, (error, results) => {
             if (error) {

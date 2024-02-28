@@ -1,20 +1,15 @@
 import database from '../database';
 import log from '../misc/logger';
 import { Post } from '../misc/types';
-import userModel from "../users/model";
 
-function getAll(): Promise<any> {
+function getAll(team: number): Promise<any> {
     return new Promise((resolve, reject) => {
-        database.query('SELECT * FROM posts', async (error, results) => {
+        database.query('SELECT * FROM posts WHERE team = ?', [team], async (error, results) => {
             if (error) {
                 log.error("posts/getAll", `Error fetching posts from database: ${error}`);
                 reject(error);
                 return;
             }
-
-            await Promise.all(results.map(async (result) => {
-                result.author = await userModel.getById(result.author);
-            }));
 
             resolve(results);
         });
@@ -30,10 +25,6 @@ function getSome(limit: number, offset: number): Promise<any> {
                 return;
             }
 
-            await Promise.all(results.map(async (result) => {
-                result.author = await userModel.getById(result.author);
-            }));
-
             resolve(results);
         });
     });
@@ -48,8 +39,6 @@ function get(id: number): Promise<any> {
                 return;
             }
 
-            results[0].author = await userModel.getById(results[0].author);
-
             resolve(results[0]);
         });
     });
@@ -61,10 +50,10 @@ function create(post: Post): Promise<any> {
         const curTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         let query = `INSERT INTO posts 
-            (content, created_at, author) 
-            VALUES (?, ?, ?)`;
+            (content, created_at, author, team) 
+            VALUES (?, ?, ?, ?)`;
 
-        let values = [post.content, curTime, post.author.id];
+        let values = [post.content, curTime, post.author, post.team];
 
         database.query(query, values, (error, results) => {
             if (error) {
@@ -79,7 +68,6 @@ function create(post: Post): Promise<any> {
 
 function update(id: number, post: Post): Promise<any> {
     return new Promise((resolve, reject) => {
-        const curTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
         let query = `UPDATE posts 
             SET content = ?

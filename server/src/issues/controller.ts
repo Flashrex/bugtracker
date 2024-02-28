@@ -3,9 +3,29 @@ import userModel from "../users/model";
 import logger from "../misc/logger";
 import { Request, Response } from "express";
 
-function listIssues(req: Request, res: Response): void {
-    model.getAll()
-        .then(issues => res.json(issues))
+async function listIssues(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const user = await userModel.getById((req.user as { id: number }).id);
+
+    if (!user) {
+        res.status(500).json({ error: "Error creating issue." });
+        return;
+    }
+
+    model.getAll(user.team)
+        .then(async issues => {
+            const updatedIssues = await Promise.all(issues.map(async (issue) => {
+                const author = await userModel.getById(issue.created_by);
+                const assigned_to = await userModel.getById(issue.assigned_to);
+                return { ...issue, created_by: author, assigned_to: assigned_to };
+            }));
+
+            res.json(updatedIssues);
+        })
         .catch(error => {
             logger.error("issues/listAction", `Error fetching issues: ${error}`);
             res.status(500).json({ error: "Error fetching issues" });
@@ -40,19 +60,22 @@ function getIssueData(req: Request, res: Response): void {
 
 async function createIssue(req: Request, res: Response): Promise<void> {
 
-    //todo: check if user is logged in and get user from database
-    //let user = {} as User;
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
 
-    const user = await userModel.get("testUser");
+    const user = await userModel.getById((req.user as { id: number }).id);
 
     if (!user) {
-        //todo: return error
+        res.status(500).json({ error: "Error creating issue." });
         return;
     }
 
     const issue = {
         ...req.body,
-        created_by: user
+        created_by: user,
+        team: user.team
     };
 
     model.create(issue)

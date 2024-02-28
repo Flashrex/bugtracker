@@ -2,10 +2,30 @@ import model from "./model";
 import { Post, User } from '../misc/types';
 import logger from "../misc/logger";
 import { Request, Response } from "express";
+import userModel from "../users/model";
 
-function listPosts(req: Request, res: Response): void {
-    model.getAll()
-        .then(posts => res.json(posts))
+async function listPosts(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const user = await userModel.getById((req.user as { id: number }).id);
+
+    if (!user) {
+        res.status(500).json({ error: "Error creating issue." });
+        return;
+    }
+
+    model.getAll(user.team)
+        .then(async posts => {
+            const updatedPosts = await Promise.all(posts.map(async (post) => {
+                const author = await userModel.getById(post.author);
+                return { ...post, author: author };
+            }));
+
+            res.json({ posts: updatedPosts, user: user.id });
+        })
         .catch(error => {
             logger.error("posts/listAction", `Error fetching posts: ${error}`);
             res.status(500).json({ error: "Error fetching posts" });
@@ -32,12 +52,27 @@ function listFewPosts(req: Request, res: Response): void {
         });
 }
 
-function createPost(req: Request, res: Response): void {
+async function createPost(req: Request, res: Response): Promise<void> {
 
-    const post = {
-        content: req.body.content,
-        author: { id: 1 /* Todo: Get User from session */ } as User
-    } as Post;
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const user = await userModel.getById((req.user as { id: number }).id);
+
+    if (!user) {
+        res.status(500).json({ error: "Error creating issue." });
+        return;
+    }
+
+    const post: Post = {
+        id: 0,
+        created_at: "",
+        team: user.team,
+        content: req.body.content as string,
+        author: user.id
+    };
 
     model.create(post)
         .then(result => res.json(result))
