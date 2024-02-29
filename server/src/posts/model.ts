@@ -99,6 +99,7 @@ function remove(id: number): Promise<any> {
     });
 }
 
+
 export default {
     getAll,
     getSome,

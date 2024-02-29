@@ -14,6 +14,9 @@ import IssueTable from '../IssueTable.vue';
 
 <style scoped>
 .issues {
+    max-height: 95vh;
+    overflow: auto;
+
     padding: 1rem 2rem;
 }
 </style>

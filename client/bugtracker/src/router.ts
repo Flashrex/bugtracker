@@ -4,6 +4,7 @@ import AboutView from "./components/views/About.vue";
 import DiscussionView from "./components/views/Discussion.vue";
 import IssuesView from "./components/views/Issues.vue";
 import IssueView from "./components/views/Issue.vue";
+import ProfileView from "./components/views/Profile.vue";
 
 import LoginView from "./components/views/Login.vue";
 import RegisterView from "./components/views/Register.vue";
@@ -49,6 +50,11 @@ const routes = [
         path: "/register",
         name: "register",
         component: RegisterView,
+    },
+    {
+        path: "/profile",
+        name: "profile",
+        component: ProfileView,
     },
     {
         path: "/:catchAll(.*)",

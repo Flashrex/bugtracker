@@ -41,6 +41,20 @@ function deleteIssue() {
     }
 
 }
+
+function updateIssue(status: string) {
+    if (issue.value) {
+        axios.put(`${import.meta.env.VITE_APP_API_ENDPOINT}/issues/${issue.value.id}`, {
+            status
+        })
+            .then(() => {
+                issue.value!.status = 'closed';
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
+}
 </script>
 
 <template>
@@ -52,15 +66,24 @@ function deleteIssue() {
             <p>Loading...</p>
         </div>
 
-        <div v-else-if="issue">
+        <div class="issueContainer" v-else-if="issue">
             <h2>{{ issue.title }}</h2>
+            <div class="tagContainer">
+                <span class="tag">Status: {{ issue.status }}</span>
+                <span v-if="issue.assigned_to" class="tag">Assigned to: {{ issue.assigned_to.username }}</span>
+            </div>
             <p>{{ issue.description }}</p>
-            <p>Status: {{ issue.status }}</p>
-            <p>Created At: {{ formatDateString(issue.created_at) }}</p>
-            <p>Updated At: {{ formatDateString(issue.updated_at) }}</p>
-            <p>Created By: {{ issue.created_by.username }}</p>
-            <div>
-                <button @click="deleteIssue">Löschen</button>
+
+
+            <div class="buttonContainer">
+                <button v-if="issue.status !== 'closed'" class="close" @click="updateIssue('closed')">Close</button>
+                <button v-else class="close" @click="updateIssue('open')">Open</button>
+                <button class="delete" @click="deleteIssue">Delete</button>
+            </div>
+
+            <div class="footer">
+                <p>Created at {{ formatDateString(issue.created_at) }} by {{ issue.created_by.username }}</p>
+                <p>Last updated at {{ formatDateString(issue.updated_at) }}</p>
             </div>
         </div>
     </div>
@@ -70,5 +93,70 @@ function deleteIssue() {
 .issue {
     padding: 1rem 2rem;
     max-width: 80vw;
+}
+
+.issueContainer {
+    width: 40vw;
+    border: 1px solid #3d3d3d21;
+    padding: 0.5rem;
+    margin-top: 1rem;
+}
+
+.issueContainer h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0rem;
+}
+
+.issueContainer p {
+    margin-bottom: 0.5rem;
+}
+
+.tagContainer {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.tag {
+    font-size: 0.8rem;
+    margin: 0;
+    padding: 0.1rem 1rem;
+    background-color: #149e52;
+    color: white;
+    border-radius: 15px;
+}
+
+.buttonContainer {
+    display: flex;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+button {
+    padding: 0.5rem 1rem;
+
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete {
+    background-color: #a31f1f;
+}
+
+.close {
+    background-color: #a35d1f;
+}
+
+.footer {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 4rem;
+}
+
+.footer>p {
+    font-size: 0.8rem;
 }
 </style>

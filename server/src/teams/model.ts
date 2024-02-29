@@ -2,6 +2,20 @@ import database from '../database';
 import log from '../misc/logger';
 import userModel from "../users/model";
 
+function exists(id: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+        database.query('SELECT * FROM teams WHERE id = ? LIMIT 1', [id], (error, results) => {
+            if (error) {
+                log.error("teams/exists", `Error checking if team exists: ${error}`);
+                reject(error);
+                return;
+            }
+
+            resolve(results.length > 0);
+        });
+    });
+}
+
 function getAll(): Promise<any> {
     return new Promise((resolve, reject) => {
         database.query('SELECT * FROM teams', async (error, results) => {
@@ -79,6 +93,7 @@ function remove(id: number): Promise<any> {
 }
 
 export default {
+    exists,
     getAll,
     getById,
     create,

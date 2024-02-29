@@ -66,8 +66,7 @@ const auth = (app: Express) => {
         const returnTo = (req.session as any).returnTo || '/';
         delete (req.session as any).returnTo;
 
-        //res.redirect(returnTo);
-        res.sendStatus(200);
+        res.redirect(returnTo);
     });
 
     app.get("/register", (req, res) => {

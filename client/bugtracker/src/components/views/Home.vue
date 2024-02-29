@@ -201,6 +201,10 @@ img {
     filter: invert(40%);
 }
 
+.ticketTextContainer {
+    text-align: center;
+}
+
 .ticketText {
     margin-bottom: 0.5rem;
     font-weight: bold;

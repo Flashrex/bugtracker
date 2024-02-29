@@ -32,10 +32,32 @@ async function listIssues(req: Request, res: Response): Promise<void> {
         });
 }
 
-function listSingleIssue(req: Request, res: Response): void {
+async function listSingleIssue(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const user = await userModel.getById((req.user as { id: number }).id);
+
+    if (!user) {
+        res.status(500).json({ error: "Error listing issue." });
+        return;
+    }
+
     model.get(parseInt(req.params.id))
         .then(async issue => {
-            res.json(issue);
+
+            if (issue.team !== user.team) {
+                res.status(401).json({ error: "Unauthorized" });
+                return;
+            }
+
+            const author = await userModel.getById(issue.created_by);
+            const assigned_to = await userModel.getById(issue.assigned_to);
+            const updatedIssue = { ...issue, created_by: author, assigned_to: assigned_to };
+
+            res.json(updatedIssue);
         })
         .catch(error => {
             logger.error("issues/getAction", `Error fetching issue: ${error}`);
@@ -98,22 +120,56 @@ async function createIssue(req: Request, res: Response): Promise<void> {
         });
 }
 
-function updateIssue(req: Request, res: Response): void {
+async function updateIssue(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    if (!isUserAutorized((req.user as { id: number }).id, parseInt(req.params.id))) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
     model.update(parseInt(req.params.id), req.body)
-        .then(result => res.json(result))
+        .then(result => {
+            res.json(result);
+        })
         .catch(error => {
             logger.error("issues/updateAction", `Error updating issue: ${error}`);
             res.status(500).json({ error: "Error updating issue" });
         });
 }
 
-function deleteIssue(req: Request, res: Response): void {
+async function deleteIssue(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    if (!isUserAutorized((req.user as { id: number }).id, parseInt(req.params.id))) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
     model.remove(parseInt(req.params.id))
         .then(result => res.json(result))
         .catch(error => {
             logger.error("issues/deleteAction", `Error deleting issue: ${error}`);
             res.status(500).json({ error: "Error deleting issue" });
         });
+}
+
+
+async function isUserAutorized(userId: number, issueId: number) {
+    const user = await userModel.getById(userId);
+
+    if (!user) {
+        return false;
+    }
+
+    const result = await model.get(issueId);
+    return result.team === user.team;
 }
 
 export {

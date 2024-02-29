@@ -25,6 +25,10 @@ function goToAbout() {
     router.push('/about');
 }
 
+function profile() {
+    router.push('/profile');
+}
+
 async function logout() {
     await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/logout`).then((response) => {
         router.push('/login');
@@ -63,6 +67,10 @@ function isSelected(page: string) {
                 <li @click="goToAbout">
                     <img alt="home_icon" src="../assets/contact.svg" width="30" height="30" />
                     <span class="icon_text" :class="{ selected: isSelected('about') }">About</span>
+                </li>
+                <li @click="profile">
+                    <img alt="home_icon" src="../assets/person.svg" width="30" height="30" />
+                    <span class="icon_text" :class="{ selected: isSelected('profile') }">Profile</span>
                 </li>
                 <li @click="logout">
                     <img alt="home_icon" src="../assets/logout.svg" width="30" height="30" />
