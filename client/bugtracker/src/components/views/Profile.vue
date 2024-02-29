@@ -28,7 +28,7 @@ function editProfile(field: string) {
             break;
 
         case 'team':
-            editData.value = { data: 'team', headline: 'Edit Team', placeholder: userData.value?.team.name || '' };
+            editData.value = { data: 'team', headline: 'Edit Team', placeholder: userData.value?.team?.name || '' };
             break;
     }
 }
@@ -49,6 +49,10 @@ const saveProfile = (value: string) => {
             break;
 
         case 'team':
+            if (!userData.value!.team) {
+                userData.value!.team = { name: value };
+                break;
+            }
             userData.value!.team.name = value;
             break;
     }

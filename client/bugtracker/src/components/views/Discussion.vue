@@ -14,7 +14,8 @@ const posts = ref<Post[]>([]);
 onMounted(async () => {
     try {
         const response = await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/posts`);
-        posts.value = response.data.posts;
+
+        posts.value = response.data.posts.sort((a: Post, b: Post) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
         userId.value = response.data.user;
 
     } catch (error) {

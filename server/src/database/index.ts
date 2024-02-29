@@ -1,14 +1,15 @@
 import mysql from 'mysql';
-import Logger from './misc/logger';
+import Logger from '../misc/logger';
 
 const connection = mysql.createConnection({
     host: process.env.HOST || 'localhost',
+    port: parseInt(process.env.PORT) || 3306,
     user: process.env.USER || 'root',
     password: process.env.PASSWORD || '',
     database: process.env.DATABASE || 'test',
 });
 
-connection.connect((err) => {
+connection.connect(async (err) => {
     if (err) {
         Logger.error('database', `Error connecting to database: ${err}`);
         return;
@@ -17,3 +18,4 @@ connection.connect((err) => {
 });
 
 export default connection;
+

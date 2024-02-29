@@ -51,6 +51,8 @@ function getById(id: number): Promise<any> {
 
 function create(team: any): Promise<any> {
 
+    team.created_at = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
     return new Promise((resolve, reject) => {
         database.query('INSERT INTO teams SET ?', team, (error, results) => {
             if (error) {
