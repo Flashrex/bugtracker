@@ -33,8 +33,6 @@ Statistiken innerhalb des Teams.
 - Open "http://localhost:8080" in your browser
 
 ## Images
-![discussion](https://github.com/Flashrex/bugtracker/blob/master/images/discussion.png?raw=true)
 ![issue](https://github.com/Flashrex/bugtracker/blob/master/images/issue.png)
-![issues](https://github.com/Flashrex/bugtracker/blob/master/images/issues.png)
 ![login](https://github.com/Flashrex/bugtracker/blob/master/images/login.png)
 ![profile](https://github.com/Flashrex/bugtracker/blob/master/images/profile.png)
