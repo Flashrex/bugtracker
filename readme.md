@@ -1,5 +1,5 @@
 # Bugtracker
-![mainpage](https://github.com/Flashrex/bugtracker/blob/master/images/bugtracker.png?raw=true)
+![mainpage](https://github.com/Flashrex/flashrex.github.io/blob/master/public/bugtracker.png?raw=true)
 
 ## Beschreibung
 Diese App kann als Bugtracker verwendet werden.
