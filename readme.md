@@ -24,6 +24,7 @@ Statistiken innerhalb des Teams.
 - [Morgan](https://www.npmjs.com/package/morgan) - HTTP request logger middleware for node.js
 - [MySql](https://www.npmjs.com/package/mysql) - node.js driver for mysql
 - [VueJs](https://vuejs.org/) - a popular frontend framework
+- [chart.js](https://www.chartjs.org/) - js library for creating charts
 
 ## Setup
 
