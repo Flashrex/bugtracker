@@ -1,5 +1,5 @@
 # Bugtracker
-![mainpage](https://github.com/Flashrex/ArtLocker/blob/master/public/readme/main.png?raw=true)
+![mainpage](https://github.com/Flashrex/flashrex.github.io/blob/master/public/bugtracker.png?raw=true)
 
 ## Beschreibung
 Diese App kann als Bugtracker verwendet werden.
@@ -33,6 +33,8 @@ Statistiken innerhalb des Teams.
 - Open "http://localhost:8080" in your browser
 
 ## Images
-![painting](https://github.com/Flashrex/ArtLocker/blob/master/public/readme/painting.png?raw=true)
-![profile](https://github.com/Flashrex/ArtLocker/blob/master/public/readme/profile.png?raw=true)
-![settings](https://github.com/Flashrex/ArtLocker/blob/master/public/readme/settings.png?raw=true)
+![discussion](https://github.com/Flashrex/bugtracker/blob/master/images/discussion.png?raw=true)
+![issue](https://github.com/Flashrex/bugtracker/blob/master/images/issue.png)
+![issues](https://github.com/Flashrex/bugtracker/blob/master/images/issues.png)
+![login](https://github.com/Flashrex/bugtracker/blob/master/images/login.png)
+![profile](https://github.com/Flashrex/bugtracker/blob/master/images/profile.png)
