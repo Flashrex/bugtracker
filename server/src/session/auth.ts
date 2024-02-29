@@ -109,7 +109,7 @@ const auth = (app: Express) => {
                 console.log(err);
             }
         });
-        res.redirect("/");
+        res.sendStatus(200);
     });
 }
 

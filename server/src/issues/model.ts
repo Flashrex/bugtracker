@@ -29,16 +29,17 @@ function get(id: number): Promise<Issue> {
     });
 }
 
-function getIssueData(): Promise<IssueData> {
+function getIssueData(team: number): Promise<IssueData> {
     return new Promise((resolve, reject) => {
         database.query(`
         SELECT 
         COUNT(*) AS total,
         SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) AS open,
         SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) AS closed,
+        SUM(CASE WHEN status = 'in_progress' THEN 1 ELSE 0 END) AS in_progress,
         SUM(CASE WHEN MONTH(created_at) = MONTH(CURRENT_DATE) AND YEAR(created_at) = YEAR(CURRENT_DATE) THEN 1 ELSE 0 END) AS issues_this_month,
         SUM(CASE WHEN MONTH(created_at) = MONTH(DATE_ADD(CURRENT_DATE, INTERVAL -1 MONTH)) AND YEAR(created_at) = YEAR(DATE_ADD(CURRENT_DATE, INTERVAL -1 MONTH)) THEN 1 ELSE 0 END) AS issues_last_month
-        FROM issues;`, async (error, results) => {
+        FROM issues WHERE team = ?;`, [team], async (error, results) => {
             if (error) {
                 log.error("issues/getIssueData", `Error fetching issue data from database: ${error}`);
                 reject(error);
@@ -50,7 +51,7 @@ function getIssueData(): Promise<IssueData> {
     });
 }
 
-function getIssueCountByAuthors(): Promise<any> {
+function getIssueCountByAuthors(team: number): Promise<any> {
     return new Promise((resolve, reject) => {
         database.query(`
         SELECT 
@@ -58,9 +59,10 @@ function getIssueCountByAuthors(): Promise<any> {
         users.username
         FROM issues
         JOIN users ON issues.created_by = users.id
+        WHERE issues.team = ?
         GROUP BY created_by
         ORDER BY count DESC
-        LIMIT 5;`, async (error, results) => {
+        LIMIT 5;`, [team], async (error, results) => {
             if (error) {
                 log.error("issues/getIssueCountByAuthors", `Error fetching issue count by authors from database: ${error}`);
                 reject(error);

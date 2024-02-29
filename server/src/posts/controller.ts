@@ -91,7 +91,26 @@ function updatePost(req: Request, res: Response): void {
         });
 }
 
-function deletePost(req: Request, res: Response): void {
+async function deletePost(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const user = await userModel.getById((req.user as { id: number }).id);
+
+    if (!user) {
+        res.status(500).json({ error: "Error creating issue." });
+        return;
+    }
+
+    const post = await model.get(parseInt(req.params.id));
+
+    if (user.id !== post.author) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
     model.remove(parseInt(req.params.id))
         .then(result => res.json(result))
         .catch(error => {

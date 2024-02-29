@@ -43,8 +43,20 @@ function listSingleIssue(req: Request, res: Response): void {
         });
 }
 
-function getIssueData(req: Request, res: Response): void {
-    Promise.all([model.getIssueData(), model.getIssueCountByAuthors()])
+async function getIssueData(req: Request, res: Response): Promise<void> {
+    if (!req.user) {
+        res.status(401).json({ error: "Unauthorized" });
+        return;
+    }
+
+    const user = await userModel.getById((req.user as { id: number }).id);
+
+    if (!user) {
+        res.status(500).json({ error: "Error creating issue." });
+        return;
+    }
+
+    Promise.all([model.getIssueData(user.team), model.getIssueCountByAuthors(user.team)])
         .then(([issueData, issueCountByAuthors]) => {
             const mergedData = {
                 ...issueData,
