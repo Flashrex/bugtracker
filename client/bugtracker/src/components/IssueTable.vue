@@ -128,4 +128,19 @@ tbody>tr:nth-child(even) {
 .closed {
     background-color: #d52626;
 }
+
+@media (max-width: 768px) {
+    .table_container {
+        overflow-x: auto;
+    }
+
+    table {
+        font-size: 0.8rem;
+    }
+
+    table td,
+    table th {
+        padding: 0.5rem;
+    }
+}
 </style>

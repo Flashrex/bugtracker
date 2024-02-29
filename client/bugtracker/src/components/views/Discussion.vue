@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SideBar from '../SideBar.vue';
 import { nextTick, onMounted, ref } from 'vue';
 import { formatDateString } from '../../utils/formatDateString';
 import type { Post, User } from '@/types';
@@ -65,6 +66,7 @@ const scrollToBottom = () => {
 </script>
 
 <template>
+    <SideBar :selected="'discussion'"></SideBar>
     <div class="discussion">
         <h1>Discussion</h1>
         <div class="chatbox">
@@ -202,7 +204,7 @@ img:hover {
     }
 
     .post_container {
-        max-height: 60vh;
+        max-height: 70vh;
     }
 
     .post {

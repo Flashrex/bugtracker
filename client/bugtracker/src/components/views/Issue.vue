@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SideBar from '../SideBar.vue';
 import router from '@/router';
 import type { Issue } from '@/types';
 import axios from 'axios';
@@ -43,6 +44,7 @@ function deleteIssue() {
 </script>
 
 <template>
+    <SideBar></SideBar>
     <div class="issue">
         <h1>Issue</h1>
 

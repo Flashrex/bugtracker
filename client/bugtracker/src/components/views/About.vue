@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import SideBar from '../SideBar.vue';
 </script>
 
 <template>
+    <SideBar :selected="'about'"></SideBar>
     <div class="about">
         <h1>About</h1>
         <p>
@@ -13,12 +15,14 @@
         </p>
 
         <ul>
-            <li>Vue 3</li>
-            <li>Vite</li>
-            <li>Node.js</li>
-            <li>Express</li>
-            <li>MongoDB</li>
-            <li>chart.js</li>
+            <li><a href="https://vuejs.org/" target="_blank">Vue 3</a></li>
+            <li><a href="https://vitejs.dev/" target="_blank">Vite</a></li>
+            <li><a href="https://nodejs.org/en" target="_blank">Node.js</a></li>
+            <li><a href="https://expressjs.com/" target="_blank">Express</a></li>
+            <li><a href="https://www.typescriptlang.org/" target="_blank">Typescript</a></li>
+            <li><a href="https://www.passportjs.org/" target="_blank">Passport</a></li>
+            <li><a href="https://www.mysql.com/" target="_blank">MySql</a></li>
+            <li><a href="https://www.chartjs.org/" target="_blank">chart.js</a></li>
         </ul>
 
         <p>
@@ -56,7 +60,6 @@ ul {
 
 li {
     margin-bottom: 0.5rem;
-    color: #149e52;
 }
 
 p {
@@ -67,5 +70,16 @@ p {
 a {
     color: #149e52;
     text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .about {
+        max-height: 100vh;
+        overflow: scroll;
+    }
 }
 </style>

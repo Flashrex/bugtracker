@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import router from '@/router';
+import axios from 'axios';
+
+const props = defineProps({
+    selected: {
+        type: String,
+        default: ''
+    }
+});
 
 function goToHome() {
     router.push('/');
@@ -17,12 +25,24 @@ function goToAbout() {
     router.push('/about');
 }
 
+async function logout() {
+    await axios.get(`${import.meta.env.VITE_APP_API_ENDPOINT}/logout`).then((response) => {
+        router.push('/login');
+    }).catch((error) => {
+        error.value = 'Invalid username or password';
+    });
+}
+
+function isSelected(page: string) {
+    return props.selected === page;
+}
+
 </script>
 
 <template>
     <div class="sidebar">
         <div class="logo-container">
-            <img alt="Vue logo" class="logo" src="../assets/logo.svg" width="50" height="50" />
+            <img alt="Vue logo" class="logo" src="../assets/trouble.svg" width="50" height="50" />
             <h1>BugTracker</h1>
         </div>
 
@@ -30,19 +50,23 @@ function goToAbout() {
             <ul>
                 <li @click="goToHome">
                     <img alt="home_icon" src="../assets/home.svg" width="30" height="30" />
-                    <span class="icon_text">Home</span>
+                    <span class="icon_text" :class="{ selected: isSelected('home') }">Home</span>
                 </li>
                 <li @click="goToIssues">
                     <img alt="home_icon" src="../assets/bug.svg" width="30" height="30" />
-                    <span class="icon_text">Issues</span>
+                    <span class="icon_text" :class="{ selected: isSelected('issues') }">Issues</span>
                 </li>
                 <li @click="goToDiscussion">
                     <img alt="home_icon" src="../assets/chat.svg" width="30" height="30" />
-                    <span class="icon_text">Discussion</span>
+                    <span class="icon_text" :class="{ selected: isSelected('discussion') }">Discussion</span>
                 </li>
                 <li @click="goToAbout">
                     <img alt="home_icon" src="../assets/contact.svg" width="30" height="30" />
-                    <span class="icon_text">About</span>
+                    <span class="icon_text" :class="{ selected: isSelected('about') }">About</span>
+                </li>
+                <li @click="logout">
+                    <img alt="home_icon" src="../assets/logout.svg" width="30" height="30" />
+                    <span class="icon_text">Logout</span>
                 </li>
             </ul>
         </nav>
@@ -55,6 +79,10 @@ function goToAbout() {
 </template>
 
 <style scoped>
+.logo {
+    filter: invert(60%);
+}
+
 .sidebar {
     width: 15vw;
     height: 100vh;
@@ -115,6 +143,11 @@ li img {
 .footer p {
     font-size: 0.8rem;
     color: #ffffff80;
+}
+
+.selected {
+    color: #149e52;
+    font-weight: bold;
 }
 
 @media (max-width: 768px) {

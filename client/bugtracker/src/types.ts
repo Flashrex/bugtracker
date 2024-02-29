@@ -28,6 +28,7 @@ export type IssueData = {
     total: number;
     open: number;
     closed: number;
+    in_progress: number;
     issues_this_month: number;
     issues_last_month: number;
     top_authors: [{ username: string, count: number }];

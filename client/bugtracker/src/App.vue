@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SideBar from './components/SideBar.vue';
+
 
 
 
@@ -11,8 +11,6 @@ import SideBar from './components/SideBar.vue';
   </header>
 
   <main>
-    <SideBar></SideBar>
-
     <router-view></router-view>
   </main>
 </template>

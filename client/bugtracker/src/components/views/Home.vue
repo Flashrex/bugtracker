@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SideBar from '../SideBar.vue';
 import type { IssueData } from '@/types';
 import { Chart, DoughnutController, BarController, BarElement, ArcElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
 import { onMounted, ref } from 'vue';
@@ -27,10 +28,6 @@ async function fetchIssueData() {
     }
 }
 
-function calcIssuesInProgress() {
-    return (issueData.value?.total ?? 0) - (issueData.value?.open ?? 0);
-}
-
 function calcDifferenceLastMonthToThisMonthInPercent() {
     const issuesThisMonth = issueData.value?.issues_this_month ?? 0;
     const issuesLastMonth = issueData.value?.issues_last_month ?? 1;
@@ -48,7 +45,7 @@ function addDoughnutChart() {
                 {
                     label: 'Issues',
                     backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
-                    data: [issueData.value?.open, calcIssuesInProgress(), issueData.value?.closed]
+                    data: [issueData.value?.open, issueData.value?.in_progress, issueData.value?.closed]
                 }
             ]
         },
@@ -79,7 +76,7 @@ function addHorizontalBarChart() {
             }]
         },
         options: {
-            responsive: false,
+            responsive: true,
             indexAxis: 'y',
             scales: {
                 x: {
@@ -93,26 +90,33 @@ function addHorizontalBarChart() {
 </script>
 
 <template>
+    <SideBar :selected="'home'"></SideBar>
     <div class="home">
         <h1>Welcome to BugTracker</h1>
         <div class="content">
             <div class="gridCards">
                 <div class="ticketContainer">
                     <img alt="ticket" src="../../assets/ticket.svg">
-                    <p class="ticketText">Total Tickets</p>
-                    <p>{{ issueData?.total }}</p>
+                    <div class="ticketTextContainer">
+                        <p class="ticketText">Total Tickets</p>
+                        <p>{{ issueData?.total }}</p>
+                    </div>
                 </div>
 
                 <div class="ticketContainer">
                     <img alt="warning" src="../../assets/warning.svg">
-                    <p class="ticketText">Open Tickets</p>
-                    <p>{{ issueData?.open }}</p>
+                    <div class="ticketTextContainer">
+                        <p class="ticketText">Open Tickets</p>
+                        <p>{{ issueData?.open }}</p>
+                    </div>
                 </div>
 
                 <div class="ticketContainer">
                     <img alt="finished" src="../../assets/finished.svg">
-                    <p class="ticketText">Closed Tickets</p>
-                    <p>{{ issueData?.closed }}</p>
+                    <div class="ticketTextContainer">
+                        <p class="ticketText">Closed Tickets</p>
+                        <p>{{ issueData?.closed }}</p>
+                    </div>
                 </div>
             </div>
 
@@ -142,8 +146,8 @@ function addHorizontalBarChart() {
             </div>
 
             <div class="rankingContainer">
-                <p class="gridHeadline">Tickets by Owner</p>
-                <canvas ref="rankingChart" width="500px" height="500px"></canvas>
+                <p class="gridHeadline">Issues by Owner</p>
+                <canvas ref="rankingChart" class="chartCanvas" width="500px" height="500px"></canvas>
             </div>
         </div>
     </div>
@@ -317,5 +321,85 @@ img {
 
 canvas {
     margin: 1rem;
+}
+
+@media (max-width: 768px) {
+
+    .home {
+        width: 90vw;
+        padding: 1rem;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    .content {
+        display: flex;
+        flex-direction: column;
+        padding: 0.2rem;
+
+        max-height: calc(100vh - 5rem);
+        overflow-y: scroll;
+    }
+
+    .gridCards {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ticketContainer {
+        margin: 0.2rem;
+        width: calc(100% - 0.4rem);
+        height: 20vw;
+
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .ticketTextContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        text-align: center;
+    }
+
+    img {
+        width: 10vw;
+        height: 10vw;
+        margin-bottom: 0;
+    }
+
+    .ticketText {
+        margin: 0.2rem;
+    }
+
+    .chartContainer {
+        width: calc(100% - 0.4rem);
+        margin: 0.2rem;
+    }
+
+    .card {
+        width: calc(100% - 0.4rem);
+        margin: 0.2rem;
+    }
+
+    .cardTopContainer {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .cardMidText {
+        margin: 0.2rem;
+    }
+
+    .rankingContainer {
+        width: calc(100% - 0.4rem);
+        margin: 0.2rem;
+    }
 }
 </style>
