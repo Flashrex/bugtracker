@@ -16,8 +16,9 @@ const port = 3000;
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
-    credentials: true
+    origin: "https://bugtracker-xi.vercel.app/",
+    credentials: true,
+    optionsSuccessStatus: 200
 }));
 
 app.use(express.json());
