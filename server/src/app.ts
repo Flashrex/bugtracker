@@ -1,22 +1,23 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import Logger from "./misc/logger";
 import morgan from "morgan";
 import cors from "cors";
 
 import auth from "./session/auth";
-
 import issuesRouter from "./issues";
 import usersRouter from "./users";
 import postsRouter from "./posts";
 import sessionRouter, { ensureAuthenticated } from "./session";
+import ENV from "./misc/environment";
 
 const app = express();
-const port = 3000;
+const port = ENV.APP_PORT || 1337;
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ENV.CLIENT_URL,
     credentials: true,
     optionsSuccessStatus: 200
 }));

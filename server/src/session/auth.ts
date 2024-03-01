@@ -5,10 +5,13 @@ import bcrypt from "bcryptjs";
 import expressSession from "express-session";
 import userModel from "../users/model";
 import { User } from "../misc/types";
+import ENV from "../misc/environment";
 
 const auth = (app: Express) => {
+
+    //Todo: use external session store for production
     app.use(expressSession({
-        secret: "test",
+        secret: ENV.SESSION_SECRET || "secret",
         resave: false,
         saveUninitialized: true,
         cookie: { secure: false, sameSite: "strict" }
