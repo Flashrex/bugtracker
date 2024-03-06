@@ -5,6 +5,7 @@ import DiscussionView from "./components/views/Discussion.vue";
 import IssuesView from "./components/views/Issues.vue";
 import IssueView from "./components/views/Issue.vue";
 import ProfileView from "./components/views/Profile.vue";
+import IssueNewView from "./components/views/IssueNew.vue";
 
 import LoginView from "./components/views/Login.vue";
 import RegisterView from "./components/views/Register.vue";
@@ -33,6 +34,12 @@ const routes = [
         path: "/issues/:id",
         name: "Issue",
         component: IssueView,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: "/issues/new",
+        name: "NewIssue",
+        component: IssueNewView,
         meta: { requiresAuth: true },
     },
     {

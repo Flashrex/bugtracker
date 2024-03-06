@@ -108,7 +108,7 @@ async function createIssue(req: Request, res: Response): Promise<void> {
 
     const issue = {
         ...req.body,
-        created_by: user,
+        created_by: user.id,
         team: user.team
     };
 
@@ -126,7 +126,7 @@ async function updateIssue(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    if (!isUserAutorized((req.user as { id: number }).id, parseInt(req.params.id))) {
+    if (!await isUserAutorized((req.user as { id: number }).id, parseInt(req.params.id))) {
         res.status(401).json({ error: "Unauthorized" });
         return;
     }
@@ -147,7 +147,7 @@ async function deleteIssue(req: Request, res: Response): Promise<void> {
         return;
     }
 
-    if (!isUserAutorized((req.user as { id: number }).id, parseInt(req.params.id))) {
+    if (!await isUserAutorized((req.user as { id: number }).id, parseInt(req.params.id))) {
         res.status(401).json({ error: "Unauthorized" });
         return;
     }
@@ -169,6 +169,7 @@ async function isUserAutorized(userId: number, issueId: number) {
     }
 
     const result = await model.get(issueId);
+
     return result.team === user.team;
 }
 
