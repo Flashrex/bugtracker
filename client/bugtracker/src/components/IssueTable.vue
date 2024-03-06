@@ -75,7 +75,23 @@ function goToIssue(id: number) {
 .table_container {
     margin: 2rem 0;
     border-radius: 5px;
+
+    display: block;
+    position: relative;
     overflow: hidden;
+}
+
+tbody {
+    display: block;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+thead {
+    display: table;
+    width: 100%;
+    position: sticky;
+    top: 0;
 }
 
 table {
